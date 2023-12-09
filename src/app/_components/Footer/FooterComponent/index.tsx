@@ -1,11 +1,12 @@
 'use client'
 
+import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { Footer } from '../../../../payload/payload-types'
-import { inclusions, noHeaderFooterUrls } from '../../../constants'
+import { Footer, Media } from '../../../../payload/payload-types'
+import { inclusions, noHeaderFooterUrls, profileNavItems } from '../../../constants'
 import { Button } from '../../Button'
 import { Gutter } from '../../Gutter'
 
@@ -16,10 +17,10 @@ const FooterComponent = ({ footer }: { footer: Footer }) => {
   const navItems = footer?.navItems || []
 
   return (
-    <footer className={noHeaderFooterUrls.includes(pathname) ? classes.hide : ' '}>
+    <footer className={noHeaderFooterUrls.includes(pathname) ? classes.hide : ''}>
       <Gutter>
         <ul className={classes.inclusions}>
-          {inclusions.map((inclusion, index) => (
+          {inclusions.map(inclusion => (
             <li key={inclusion.title}>
               <Image
                 src={inclusion.icon}
@@ -28,23 +29,27 @@ const FooterComponent = ({ footer }: { footer: Footer }) => {
                 height={36}
                 className={classes.icon}
               />
+
               <h5 className={classes.title}>{inclusion.title}</h5>
               <p>{inclusion.description}</p>
             </li>
           ))}
         </ul>
       </Gutter>
+
       <div className={classes.footer}>
         <Gutter>
           <div className={classes.wrap}>
             <Link href="/">
               <Image src="/logo-white.svg" alt="logo" width={170} height={50} />
             </Link>
-            <p>{footer.copyright}</p>
+
+            <p>{footer?.copyright}</p>
+
             <div className={classes.socialLinks}>
               {navItems.map(item => {
-                const icon = ''
-
+                const icon = item?.link?.icon as Media
+                console.log(item)
                 return (
                   <Button
                     key={item.link.label}
@@ -53,7 +58,13 @@ const FooterComponent = ({ footer }: { footer: Footer }) => {
                     newTab={true}
                     className={classes.socialLinkItem}
                   >
-                    {item.link.label}
+                    <Image
+                      src={icon?.url}
+                      alt={item.link.label}
+                      width={24}
+                      height={24}
+                      className={classes.socialIcon}
+                    />
                   </Button>
                 )
               })}
